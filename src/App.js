@@ -1,10 +1,20 @@
 import React, {useState, useEffect} from 'react';
 import './App.css';
+import axios from "axios";
 
 function App() {
 
-    useEffect({
+    async function getPokemonList() {
+        try {
+            const {data: {count, next, previous, results}} = await axios("https://pokeapi.co/api/v2/pokemon")
+            console.log(results[4].url);
+        } catch (e) {
+            console.log(e);
+        }
+    }
 
+    useEffect(() => {
+        getPokemonList()
     }, [])
 
     return (
