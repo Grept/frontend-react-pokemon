@@ -1,41 +1,47 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
-import axios from "axios";
 import PokemonCard from "./components/PokemonCard";
+import axios from "axios";
 
 
 function App() {
-    const [pokemon, setPokemon] = useState({});
+    const [pokemonList, setPokemonList] = useState([])
+    const [nextPageUrl, setNextPageUrl] = useState([])
+    const [prevPageUrl, setPrevPageUrl] = useState([])
 
-    // async function getPokemonList() {
-    //     try {
-    //         const {data: {count, next, previous, results}} = await axios.get("https://pokeapi.co/api/v2/pokemon")
-    //         console.log(results[4].url);
-    //     } catch (e) {
-    //         console.log(e);
-    //     }
-    // }
-
-    async function getPokemon() {
-        try{
-            const {data} = await axios.get("https://pokeapi.co/api/v2/pokemon/ditto")
-            setPokemon(data);
-            console.log(data);
+    async function getPokemonList(apiUrl) {
+        try {
+            const {data: {next, previous, results}} = await axios.get(apiUrl)
+            setPokemonList(results);
+            setNextPageUrl(next);
+            setPrevPageUrl(previous);
         } catch (e) {
-            console.log(e)
+            console.log(e);
         }
     }
 
     useEffect(() => {
-        // getPokemonList()
-        if(pokemon) {
-            getPokemon();
-        }
+        getPokemonList("https://pokeapi.co/api/v2/pokemon");
     }, [])
+
 
     return (
         <div>
-            <PokemonCard pokemon={pokemon} />
+            <h1>POKEMON</h1>
+            <section>
+                <button type="button" onClick={() => getPokemonList(prevPageUrl)}>Vorige</button>
+                <button type="button" onClick={() => getPokemonList(nextPageUrl)}>Volgende</button>
+            </section>
+            <section>
+                {pokemonList.length > 0 &&
+                <ul>
+                    {pokemonList.map((e) => {
+                        return <li key={e.name + e.url}><PokemonCard name={e.name}/></li>
+                    })}
+                </ul>
+                }
+            </section>
+
         </div>
     );
 }
