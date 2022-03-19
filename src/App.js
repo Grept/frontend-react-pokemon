@@ -5,16 +5,13 @@ import axios from "axios";
 
 
 function App() {
-    const [pokemonList, setPokemonList] = useState([])
-    const [nextPageUrl, setNextPageUrl] = useState([])
-    const [prevPageUrl, setPrevPageUrl] = useState([])
+    const [pokemonListData, setPokemonListData] = useState({})
 
     async function getPokemonList(apiUrl) {
         try {
-            const {data: {next, previous, results}} = await axios.get(apiUrl)
-            setPokemonList(results);
-            setNextPageUrl(next);
-            setPrevPageUrl(previous);
+            const {data} = await axios.get(apiUrl)
+            setPokemonListData(data);
+            // console.log(data)
         } catch (e) {
             console.log(e);
         }
@@ -26,23 +23,24 @@ function App() {
 
 
     return (
-        <div>
-            <h1>POKEMON</h1>
-            <section>
-                <button type="button" onClick={() => getPokemonList(prevPageUrl)}>Vorige</button>
-                <button type="button" onClick={() => getPokemonList(nextPageUrl)}>Volgende</button>
-            </section>
-            <section>
-                {pokemonList.length > 0 &&
-                <ul>
-                    {pokemonList.map((e) => {
-                        return <li key={e.name + e.url}><PokemonCard name={e.name}/></li>
+        <main>
+            <h1>POKEDEX</h1>
+            <nav>
+                <button type="button" onClick={() => getPokemonList(pokemonListData.previous)}>Vorige</button>
+                <button type="button" onClick={() => getPokemonList(pokemonListData.next)}>Volgende</button>
+            </nav>
+            <section className="pokemon-list">
+                {pokemonListData.results &&
+                <>
+                    {pokemonListData.results.map((e) => {
+                        return <PokemonCard name={e.name} key={e.name + e.url}/>
                     })}
-                </ul>
+                </>
+
                 }
             </section>
 
-        </div>
+        </main>
     );
 }
 
