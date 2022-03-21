@@ -38,3 +38,16 @@ ul {
     list-style: none;
     padding-left: 0;
 }
+
+ul li {
+    background: rgb(170, 211, 226);
+
+    padding: 3px 15px 3px 15px;
+    margin: 5px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+h4 {
+    text-align: center;
+}

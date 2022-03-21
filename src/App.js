@@ -11,7 +11,6 @@ function App() {
         try {
             const {data} = await axios.get(apiUrl)
             setPokemonListData(data);
-            // console.log(data)
         } catch (e) {
             console.log(e);
         }
@@ -21,14 +20,15 @@ function App() {
         getPokemonList("https://pokeapi.co/api/v2/pokemon");
     }, [])
 
-
     return (
         <main>
             <h1>POKEDEX</h1>
+
             <nav>
                 <button type="button" onClick={() => getPokemonList(pokemonListData.previous)}>Vorige</button>
                 <button type="button" onClick={() => getPokemonList(pokemonListData.next)}>Volgende</button>
             </nav>
+
             <section className="pokemon-list">
                 {pokemonListData.results &&
                 <>
